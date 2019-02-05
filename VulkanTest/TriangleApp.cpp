@@ -1,6 +1,5 @@
 #include "TriangleApp.h"
 
-
 void TriangleApp::initWindow()
 {
 	glfwInit();
@@ -15,7 +14,9 @@ void TriangleApp::initWindow()
 void TriangleApp::initVulkan() {
 
 	createInstance();
-
+	setupDebugCallback(); 
+	pickPhysicalDevice();
+	createLogicalDevice();
 }
 
 void TriangleApp::mainLoop()
@@ -28,6 +29,7 @@ void TriangleApp::mainLoop()
 void TriangleApp::cleanup()
 {
 	vkDestroyInstance(instance, nullptr);
+	vkDestroyDevice(logicalDevice, nullptr);
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
@@ -112,3 +114,84 @@ bool TriangleApp::checkValidationSupport()
 
 	return true;
 }
+
+void TriangleApp::setupDebugCallback()
+{
+	
+}
+
+void TriangleApp::pickPhysicalDevice()
+{
+	uint32_t physicalDevicesCount = 0;
+	vkEnumeratePhysicalDevices(instance, &physicalDevicesCount, &physicalDevice);
+
+	if (physicalDevicesCount == 0)
+	{
+		std::runtime_error("Failed to find the GPU's with vulkan support");
+	}
+
+	std::vector<VkPhysicalDevice> physicalDevices;
+	vkEnumeratePhysicalDevices(instance, &physicalDevicesCount, physicalDevices.data());
+
+	for (auto device : physicalDevices)
+	{
+		if (isDeviceSuitable(device)) {
+			physicalDevice = device;
+			break;
+		}
+	}
+
+	if (physicalDevice == VK_NULL_HANDLE)
+	{
+		std::runtime_error("Unable to find a suitable GPU");
+	}
+}
+
+bool TriangleApp::isDeviceSuitable(VkPhysicalDevice device)
+{
+	QueueFamilyIndices indices = findQueueFamilies(device);
+
+	return indices.isComplete();
+}
+
+void TriangleApp::createLogicalDevice()
+{
+	QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+
+	VkDeviceQueueCreateInfo queuecreateInfo = {};
+
+	queuecreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	queuecreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+	queuecreateInfo.queueCount = 1;
+
+	float queuePriority = 1.0f;
+	queuecreateInfo.pQueuePriorities = &queuePriority;
+
+	VkPhysicalDeviceFeatures deviceFeatures{};
+
+	VkDeviceCreateInfo createInfo = {};
+	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+
+
+	createInfo.pQueueCreateInfos = &queuecreateInfo;
+	createInfo.queueCreateInfoCount = 1;
+
+	createInfo.pEnabledFeatures = &deviceFeatures;
+
+	createInfo.enabledExtensionCount = 0;
+
+	if (enableValidationLayers) {
+		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+		createInfo.ppEnabledLayerNames = validationLayers.data();
+	}
+	else {
+		createInfo.enabledLayerCount = 0;
+	}
+
+	if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &logicalDevice) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create logical device!");
+	}
+
+	vkGetDeviceQueue(logicalDevice, indices.graphicsFamily.value(), 0, &graphicsQueue);
+}
+
