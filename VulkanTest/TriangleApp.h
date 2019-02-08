@@ -7,6 +7,10 @@
 #include <set>
 #include <iostream>
 #include <optional>
+#include <algorithm>
+
+const int WIDTH = 800;
+const int HEIGHT = 600;
 
 
 class TriangleApp {
@@ -80,6 +84,16 @@ private:
 		struct SwapChainSupportDetails;
 		SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice physicalDevice);
 
+		VkSurfaceFormatKHR  chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+
+		VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> availablePresentModes);
+
+		VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+
+		void createSwapChain();
+
+		void createImageViews();
+
 
 
 /*		MEMBER DATA */
@@ -99,6 +113,8 @@ private:
 		VkSurfaceKHR surface;
 
 		VkQueue presentQueue;
+
+		VkSwapchainKHR swapChain;
 
 		const std::vector<const char* > validationLayers = {
 			"VK_LAYER_LUNARG_standard_validation"
@@ -123,5 +139,12 @@ private:
 			std::vector<VkSurfaceFormatKHR> formats;
 			std::vector<VkPresentModeKHR> presentModes;
 		};
+
+		std::vector<VkImage> swapChainImages;
+		VkFormat swapChainImageFormat;
+		VkExtent2D swapChainExtent;
+
+		std::vector<VkImageView> swapChainImageViews;
+
 
 };
