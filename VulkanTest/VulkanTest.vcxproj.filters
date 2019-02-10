@@ -13,18 +13,35 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{1057154f-e59a-49ce-8b2e-454de04684f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TriangleApp.cpp">
+    <ClCompile Include="Source\TriangleApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TriangleApp.h">
+    <ClInclude Include="Source\TriangleApp.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\frag.spv">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Triangle.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Triangle.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\vert.spv">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

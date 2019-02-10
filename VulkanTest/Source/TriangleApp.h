@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <vector>
 #include <set>
+#include <fstream>
 #include <iostream>
 #include <optional>
 #include <algorithm>
@@ -94,7 +95,19 @@ private:
 
 		void createImageViews();
 
+		void createGraphicsPipeline();
 
+		std::vector<char> readFile(const std::string& fileName);
+
+		VkShaderModule createShaderModule(std::vector<char> shaderCode);
+
+		void createRenderPass();
+
+		void createFramebuffers();
+
+		void createCommandPool();
+
+		void createCommandBuffers();
 
 /*		MEMBER DATA */
 
@@ -146,5 +159,15 @@ private:
 
 		std::vector<VkImageView> swapChainImageViews;
 
+		VkRenderPass renderPass;
 
+		VkPipelineLayout pipelineLayout;
+
+		VkPipeline graphicsPipeline;
+
+		std::vector<VkFramebuffer> swapChainFramebuffers;
+
+		VkCommandPool commandPool;
+
+		std::vector<VkCommandBuffer> commandBuffers;
 };
