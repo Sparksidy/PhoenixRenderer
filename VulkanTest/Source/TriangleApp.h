@@ -12,6 +12,7 @@
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
+const int MAX_FRAMES_IN_FLIGHT = 2;
 
 
 class TriangleApp {
@@ -79,7 +80,7 @@ private:
 		
 		bool isDeviceSuitable(VkPhysicalDevice device);
 
-		struct QueueFamilyIndices;														//Forward Declaration
+		struct QueueFamilyIndices;														
 		QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
 		struct SwapChainSupportDetails;
@@ -108,6 +109,20 @@ private:
 		void createCommandPool();
 
 		void createCommandBuffers();
+
+		void drawFrame();
+
+		void createSyncObjects();
+
+		void recreateSwapChain();
+
+		void cleanupSwapChain();
+
+		static void framebufferResizeCallback(GLFWwindow* window, int width, int height)
+		{
+			auto app = reinterpret_cast<TriangleApp*>(glfwGetWindowUserPointer(window));
+			app->framebufferResized = true;
+		}
 
 /*		MEMBER DATA */
 
@@ -170,4 +185,14 @@ private:
 		VkCommandPool commandPool;
 
 		std::vector<VkCommandBuffer> commandBuffers;
+
+		std::vector<VkSemaphore> imageAvailableSemaphore;
+
+		std::vector<VkSemaphore> renderFinishedSemaphore;
+
+		std::vector<VkFence> inFlightFences;
+
+		size_t currentFrame = 0;
+
+		bool framebufferResized = false;
 };
