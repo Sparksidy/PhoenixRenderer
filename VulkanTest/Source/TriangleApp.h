@@ -4,11 +4,14 @@
 
 #include <stdexcept>
 #include <vector>
+#include <array>
 #include <set>
 #include <fstream>
 #include <iostream>
 #include <optional>
 #include <algorithm>
+
+#include <glm/glm.hpp>
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -124,6 +127,16 @@ private:
 			app->framebufferResized = true;
 		}
 
+		void createVertexBuffer();
+
+		uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
+		void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+
+		void copyBuffer(VkBuffer srcbuffer, VkBuffer destbuffer, VkDeviceSize size);
+
+		void createIndexBuffer();
+
 /*		MEMBER DATA */
 
 		GLFWwindow* window = nullptr;
@@ -195,4 +208,57 @@ private:
 		size_t currentFrame = 0;
 
 		bool framebufferResized = false;
+
+		struct Vertex {
+			glm::vec2 pos;
+			glm::vec3 color;
+
+			static VkVertexInputBindingDescription getBindingDescription()
+			{
+				VkVertexInputBindingDescription description = {};
+
+				description.binding = 0;
+				description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+				description.stride = sizeof(Vertex);
+
+				return description;
+			}
+
+			static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescription()
+			{
+				std::array<VkVertexInputAttributeDescription, 2> description = {};
+
+				description[0].binding = 0;
+				description[0].format = VK_FORMAT_R32G32_SFLOAT;
+				description[0].location = 0;
+				description[0].offset = offsetof(Vertex, pos);
+
+
+				description[1].binding = 0;
+				description[1].location = 1;
+				description[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+				description[1].offset = offsetof(Vertex, color);
+
+				return description;
+			}
+		};
+
+		const std::vector<Vertex> vertices{
+			{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+			{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+			{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+			{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+		};
+
+		const std::vector<uint16_t> indices{
+			0, 1, 2, 2, 3, 0
+		};
+
+		VkBuffer vertexBuffer;
+
+		VkDeviceMemory vertexBufferMemory;
+
+		VkBuffer indexBuffer;
+
+		VkDeviceMemory indexBufferMemory;
 };

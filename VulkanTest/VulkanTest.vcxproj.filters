@@ -31,16 +31,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\frag.spv">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\Triangle.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\Triangle.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\vert.spv">
+    <None Include="Shaders\TriangleFrag.spv">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\TriangleVert.spv">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
